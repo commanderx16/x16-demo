@@ -16,7 +16,7 @@ veraisr = verareg+7
 
 	!byte $0b,$08,$01,$00,$9e,$32,$30,$36,$31,$00,$00,$00
 
-	jsr initv
+	jsr video_init
 
 	lda #$10
 	sta verahi
@@ -65,7 +65,7 @@ loop3:	lda (2),y
 	sta veramid
 	sta veralo
 
-	lda #7 << 5 | 1 << 3 | 1 << 1 | 1; // mode=7, vscale=1, hscale=1, enabled=1
+	lda #7 << 5 | 1; // mode=7, enabled=1
 	sta veradat ; 0
 	; ignore
 	sta veradat ; 1
@@ -77,47 +77,26 @@ loop3:	lda (2),y
 	sta veradat; 4
 	lda #0 >> 10;
 	sta veradat ; 5
-	lda #320/4
-	sta veradat ; 6
+
+	lda #$41
+	sta veralo
+	lda #64
+	sta veradat ; hscale=2x
+	sta veradat ; vscale=2x
 
 	jmp *
 
-;init video
-;
-initv
+video_init:
 	lda #0
-	sta veractl     ;set ADDR1 active
-
-	lda #$14        ;$40000: layer 1 registers
-	sta verahi
-	lda #0
+	sta veractl ; set ADDR1 active
 	sta veramid
-	sta veralo
-
-	ldx #0
-px4	lda tvera,x
-	sta veradat
-	inx
-	cpx #tverend-tvera
-	bne px4
-
+	lda #$14    ; $40040
+	sta verahi
 	lda #$40
 	sta veralo
 	lda #1
 	sta veradat ; VGA output
-
 	rts
-
-mapbas	=0
-tilbas	=$20000
-
-tvera:
-	!byte 0 << 5 | 1  ;mode=0, enabled=1
-	!byte 1 << 2 | 2  ;maph=64, mapw=128
-	!word mapbas >> 2 ;map_base
-	!word tilbas >> 2 ;tile_base
-	!word 0, 0        ;hscroll, vscroll
-tverend
 
 bitmap:
 !bin "mode7-bitmap-cut.bin"
