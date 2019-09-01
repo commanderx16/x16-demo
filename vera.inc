@@ -40,6 +40,39 @@ vreg_sprd = $40800
 	lda veradat
 }
 
+!macro sprset .offset {
+	lda #<(vreg_sprd >> 16) | $10
+	sta verahi
+	txa
+	lsr
+	lsr
+	lsr
+	lsr
+	lsr
+	clc
+	adc #<(vreg_sprd + .offset >> 8)
+	sta veramid
+	txa
+	asl
+	asl
+	asl
+	clc
+	adc #<((vreg_sprd + .offset))
+	sta veralo
+}
+
+!macro sprload .offset {
+	+sprset .offset
+	lda veradat
+}
+
+!macro sprstore .offset {
+	pha
+	+sprset .offset
+	pla
+	sta veradat
+}
+
 !macro video_init {
 	lda #0
 	sta veractl ; set ADDR1 active
