@@ -14,7 +14,9 @@
 
 MAX_SPRITES = 16
 MAX_X = 640
+MIN_X = $10000-16
 MAX_Y = 480
+MIN_Y = $10000-32
 
 spr_data = $10000
 
@@ -70,33 +72,46 @@ l4:	lda sprite + $300,x
 loop:
 	ldx #0
 lo2:
+
+; set x pos
 	lda sprx_lo,x
 	+sprstore 0
+	lda sprx_hi,x
+	and #%00000011
+	sta 2
 	+sprload 1
 	and #%11111100
-	ora sprx_hi,x
+	ora 2
 	+sprstore 1
 	lda spry_lo,x
 	+sprstore 2
+	lda spry_hi,x
+	and #%00000001
+	sta 2
 	+sprload 3
 	and #%11111110
-	ora spry_hi,x
+	ora 2
 	+sprstore 3
 
+; update x pos
 	inc sprx_lo,x
 	bne ll1
 	inc sprx_hi,x
-ll1:	lda sprx_lo,x
+ll1:	lda sprx_hi,x
+	bmi ll2
+	lda sprx_lo,x
 	sec
 	sbc #<MAX_X
 	lda sprx_hi,x
 	sbc #>MAX_X
 	bcc ll2
-	lda #0
+	lda #<MIN_X
 	sta sprx_lo,x
+	lda #>MIN_X
 	sta sprx_hi,x
 ll2:
 
+; update y pos
 	lda spry_lo,x
 	sec
 	sbc #1
@@ -104,6 +119,14 @@ ll2:
 	lda spry_hi,x
 	sbc #0
 	sta spry_hi,x
+
+	lda spry_hi,x
+	bpl ll4
+	lda spry_lo,x
+	sec
+	sbc #<MIN_Y
+	lda spry_hi,x
+	sbc #>MIN_Y
 	bcs ll4
 	lda #<MAX_Y
 	sta spry_lo,x
@@ -171,8 +194,9 @@ sprite:
 sprx_lo:
 	!byte 216, 47, 111, 171, 118, 34, 129, 97, 164, 168, 41, 29, 228, 207, 140, 17
 sprx_hi:
-	!fill MAX_SPRITES, 0
+	!byte 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0
 spry_lo:
 	!byte 221, 223, 182, 216, 50, 181, 147, 234, 164, 219, 251, 168, 14, 155, 141, 83
 spry_hi:
-	!fill MAX_SPRITES, 0
+	!byte 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+
