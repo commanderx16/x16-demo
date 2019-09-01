@@ -1,22 +1,10 @@
-!if MACHINE_C64 = 1 {
-	verareg =$df00
-} else {
-	verareg =$9f20
-}
-verahi  = verareg+0
-veramid = verareg+1
-veralo  = verareg+2
-veradat = verareg+3
-veradat2= verareg+4
-veractl = verareg+5
-veraien = verareg+6
-veraisr = verareg+7
+!src "vera.inc"
 
 *=$0801
 
 	!byte $0b,$08,$01,$00,$9e,$32,$30,$36,$31,$00,$00,$00
 
-	jsr video_init
+	+video_init
 
 	lda #$10
 	sta verahi
@@ -85,18 +73,6 @@ loop3:	lda (2),y
 	sta veradat ; vscale=2x
 
 	jmp *
-
-video_init:
-	lda #0
-	sta veractl ; set ADDR1 active
-	sta veramid
-	lda #$14    ; $40040
-	sta verahi
-	lda #$40
-	sta veralo
-	lda #1
-	sta veradat ; VGA output
-	rts
 
 bitmap:
 !bin "mode7-bitmap-cut.bin"
