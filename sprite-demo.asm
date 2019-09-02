@@ -94,9 +94,13 @@ lo2:
 	+sprstore 3
 
 ; update x pos
-	inc sprx_lo,x
-	bne ll1
-	inc sprx_hi,x
+	lda sprx_lo,x
+	clc
+	adc speed_x,x
+	sta sprx_lo,x
+	lda #0
+	adc sprx_hi,x
+	sta sprx_hi,x
 ll1:	lda sprx_hi,x
 	bmi ll2
 	lda sprx_lo,x
@@ -114,7 +118,7 @@ ll2:
 ; update y pos
 	lda spry_lo,x
 	sec
-	sbc #1
+	sbc speed_y,x
 	sta spry_lo,x
 	lda spry_hi,x
 	sbc #0
@@ -139,7 +143,7 @@ ll4:
 	jmp lo2
 nlo2:
 
-	lda #10
+	lda #10 * 10
 	ldy #0
 delay:	dey
 	bne delay
@@ -200,3 +204,8 @@ spry_lo:
 spry_hi:
 	!byte 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
 
+speed_x:
+	!byte 2, 0, 2, 1, 2, 1, 3, 3, 4, 3, 0, 2, 2, 2, 4, 0
+
+speed_y:
+	!byte 4, 3, 4, 4, 2, 2, 1, 4, 0, 3, 0, 2, 3, 2, 3, 1
