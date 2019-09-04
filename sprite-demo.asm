@@ -20,22 +20,19 @@ MIN_Y = $10000-32
 
 spr_data = $10000
 
-; configure sprite #0
+; configure sprites
 
 	ldx #0
 setup:
-	txa
-	asl
-	asl
-	asl
-	asl
-	+sprstore 1 ; palette offset
-	lda #3 << 2 | 1 << 1 ; z-depth=3, mode=1
-	+sprstore 3
-	lda #<spr_data
-	+sprstore 4
-	lda #8 | 1 << 4 | 2 << 6 | >spr_data
-	+sprstore 5
+	txa                  ; palette offset in bits 0-3
+	ora #2 << 6 | 1 << 4 ; height=32px, width=16px
+	+sprstore 7
+	lda #3 << 2          ; z-depth=3
+	+sprstore 6
+	lda #<(spr_data >> 5)
+	+sprstore 0
+	lda #>(spr_data >> 5) | 1 << 7 ; mode=1
+	+sprstore 1
 	inx
 	cpx #MAX_SPRITES
 	beq setup_done
@@ -75,23 +72,13 @@ lo2:
 
 ; set x pos
 	lda sprx_lo,x
-	+sprstore 0
-	lda sprx_hi,x
-	and #%00000011
-	sta 2
-	+sprload 1
-	and #%11111100
-	ora 2
-	+sprstore 1
-	lda spry_lo,x
 	+sprstore 2
-	lda spry_hi,x
-	and #%00000001
-	sta 2
-	+sprload 3
-	and #%11111110
-	ora 2
+	lda sprx_hi,x
 	+sprstore 3
+	lda spry_lo,x
+	+sprstore 4
+	lda spry_hi,x
+	+sprstore 5
 
 ; update x pos
 	lda sprx_lo,x
@@ -143,7 +130,7 @@ ll4:
 	jmp lo2
 nlo2:
 
-	lda #10 * 10
+	lda #10 
 	ldy #0
 delay:	dey
 	bne delay
@@ -209,3 +196,6 @@ speed_x:
 
 speed_y:
 	!byte 4, 3, 4, 4, 2, 2, 1, 4, 0, 3, 0, 2, 3, 2, 3, 1
+
+
+
