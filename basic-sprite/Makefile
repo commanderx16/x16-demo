@@ -1,6 +1,6 @@
 all: smiley.bas
 
-simley.bas: smiley.inc
+smiley.bas: smiley.inc
 	cat prolog.inc smiley.inc > smiley.bas
 
 smiley.inc: smiley.png
