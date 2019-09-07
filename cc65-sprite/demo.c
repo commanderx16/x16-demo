@@ -150,7 +150,7 @@ int main(void)
         // y coordinate 9:8
         vpoke(4, 0x805 + adr, 0);
 
-        // z-depth: in front of layer 2, 16 bpp
+        // z-depth: in front of layer 2
         vpoke(4, 0x806 + adr, 0x0c);
 
         // 64 pixels for width and height
