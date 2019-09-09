@@ -119,7 +119,7 @@ int main(void)
     // disable interrupts
     __asm__("sei");
 
-    // bad hack: redefine CC65 stack from $0xa800-0xaff, should be a proper x16 custom target
+    // bad hack: redefine CC65 stack to $0xa800-0xafff, should be a proper x16 custom target
     *((uint8_t*) 0x02) = 0x00;
     *((uint8_t*) 0x03) = 0xb0;
 
