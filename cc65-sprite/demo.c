@@ -64,6 +64,8 @@ struct VERA_t {
     uint8_t data1;
     uint8_t data2;
     uint8_t ctrl;
+    uint8_t ien;
+    uint8_t isr;
 };
 
 #define VERA (*(volatile struct VERA_t*) 0x9f20)
@@ -86,6 +88,9 @@ static void irq()
 {
     uint8_t j = ofs;
     uint8_t i;
+
+    // clear interrupt flags
+    VERA.isr = 1;
 
     // update sprite y coordinate
     for (i = 0; i < SPRITE_COUNT; i++) {
@@ -115,17 +120,15 @@ int main(void)
     // switch back to uppercase character set
     __asm__("lda #$8e");
     __asm__("jsr BSOUT");
-
+    
     // disable interrupts
     __asm__("sei");
 
     // bad hack: redefine CC65 stack to $0xa800-0xafff, should be a proper x16 custom target
-    *((uint8_t*) 0x02) = 0x00;
-    *((uint8_t*) 0x03) = 0xb0;
-
+    *((uint16_t*) 0x02) = 0xb000;
+    
     // set new interrupt function
-    *((uint8_t*) 0x0314) = (uint8_t) (((uint16_t) irq) & 0xff);
-    *((uint8_t*) 0x0315) = (uint8_t) ((((uint16_t) irq) >> 8) & 0xff);
+    *((uint16_t*) 0x0314) = (uint16_t) irq;
     
     // initialize sprite information
     for (i = 0; i < SPRITE_COUNT; i++) {
