@@ -1,0 +1,133 @@
+All_names_use_underscore_instead_of_camel_case
+Sorry_camel_peeps
+
+;=================================================
+;=================================================
+;
+;   Section
+;
+;-------------------------------------------------
+;
+; Section comments should precede most major portions of a file.
+; If the section has a description, prefer placing it immediately
+; after the section comment.
+;
+
+!src "library_macros_and_defines_are_in_a_header_with_an_extension_of.inc"
+!src "and_included_at_the_top_of_any_file_that_needs_them.inc"
+!src "which_is_hopefully_only_the_main_file_of_the_program.inc"
+
+;=================================================
+; Macros_have_a_header_comment
+;   Briefly describing their purpose
+;-------------------------------------------------
+; INPUTS:   .each_variable      Gets a description
+;           [.optional_params]  When defining multiple macros with the same name,
+;                               optional params are in brackets. They work like
+;                               optional params in C++17 - to specify a particular
+;                               param you must specify all previous ones as well.
+;           [.another = 2]      Another optional param, but with a default value
+;-------------------------------------------------
+; MODIFIES: A, X, Y, $And_variables_as_appropriate
+
+!macro MACROS_ARE_ALWAYS_UPPER_CASE {}
+
+!define DEFINES_ARE_ALSO_UPPER_CASE=1
+
+Memory_mapped_registers_start_with_upper_case=$9F25
+Global_variables_will_also_follow_this_convention=$9F26
+
+;=================================================
+; Functions_also_get_a_header_comment
+;   Briefly describing their purpose
+;-------------------------------------------------
+; INPUTS:   A   Register or Variable_as_appropriate
+;
+;-------------------------------------------------
+; MODIFIES: A, X, Y, And_variables_as_appropriate
+
+function_names_are_lower_case:
+    jsr
+
+__labels__that_only_exist_to_create:
+__debugging__symbols_or_to_segment_the:
+__code__are_decorated:
+
+;=================================================
+; And_yes_the_modifies_section_implies
+;   That I am using __cdecl() calling semantics
+;   and it is up to the caller to preserve anything
+;   they need.
+;-------------------------------------------------
+; INPUTS:   A   Register or Variable_as_appropriate
+;
+;-------------------------------------------------
+; MODIFIES: A, X, Y, And_variables_as_appropriate
+
+sys_function_names_from_a_lib_are_prefixed_with_a_subsytem_name_or_abbreviation:
+    jsr     ; Single-line, inline comments start on a convenient tab indentation
+
+    ; Multi-line, comments within executable code prefers to start
+    ; on the same tab indentation as instructions. This is to differentiate
+    ; from comments outside of an executable context.
+
+.loop: 
+    Any
+    loops
+    that
+    are
+    more
+    than
+    12
+    lines
+    need
+    a
+    real
+    label
+    jmp .loop
+
+-   short
+    loops
+    dont
+    jmp -
+
+.prefer_prefixing_local_labels_with_dots:
+    ; This is because ACME's treatment of the @ symbol is confusing to me.
+    ; Their docs say it's a "cheap local", but I don't know what that means,
+    ; and ran into mysterious errors about name collisions when trying to
+    ; use it.
+
+;=================================================
+; Libs
+;
+;-------------------------------------------------
+!src "library_definitions_and_implementations_are_in_a_source_file_with_an_extension_of.asm"
+
+;=================================================
+; Data
+;
+;-------------------------------------------------
+Constant_data_variables_go_into_their_own_block:
+    !byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+
+;=================================================
+; Variables
+;
+;-------------------------------------------------
+Global_variable_labels_begin_with_upper_case: !byte $00
+Sys_global_variables_from_a_lib_are_prefixed_with_a_subsystem_name_or_abbreviation: !byte 00
+
+Large_blocks_of_data_begin_on_the_following_line:
+    !byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    !byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    !byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    !byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+
+; Avoid putting more than 16 bytes on a single line, for readability.
+
+!src "external_variables_go_into_a_source_file_ending_with_vars.asm"
+!src "system_vars.asm"    ; system_vars always comes last. 
+
+; sys_vars.asm includes a label to the end of the variables list
+; which is referenced for defines, such as when reserving complex
+; blocks of memory.
