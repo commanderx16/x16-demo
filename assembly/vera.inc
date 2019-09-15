@@ -3,21 +3,23 @@
 } else {
 	verareg =$9f20
 }
-verahi  = verareg+0
+veralo  = verareg+0
 veramid = verareg+1
-veralo  = verareg+2
+verahi  = verareg+2
 veradat = verareg+3
 veradat2= verareg+4
 veractl = verareg+5
 veraien = verareg+6
 veraisr = verareg+7
 
-vreg_lay1 = $40000
-vreg_lay2 = $40010
-vreg_spr  = $40020
-vreg_cmp  = $40040
-vreg_pal  = $40200
-vreg_sprd = $40800
+vreg_cmp  = $F0000
+vreg_pal  = $F1000
+vreg_lay1 = $F2000
+vreg_lay2 = $F3000
+vreg_spr  = $F4000
+vreg_sprd = $F5000
+
+AUTO_INC_1 = $100000
 
 !macro vset .addr {
 	lda #<(.addr >> 16) | $10
@@ -77,9 +79,9 @@ vreg_sprd = $40800
 	lda #0
 	sta veractl ; set ADDR1 active
 	sta veramid
-	lda #$14    ; $40040
+	lda #$1F    ; $40040
 	sta verahi
-	lda #$40
+	lda #$00
 	sta veralo
 	lda #1
 	sta veradat ; VGA output

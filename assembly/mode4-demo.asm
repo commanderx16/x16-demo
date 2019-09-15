@@ -6,11 +6,7 @@
 
 	+video_init
 
-	lda #$10
-	sta verahi
-	lda #0
-	sta veramid
-	sta veralo
+	+vset $00000 | AUTO_INC_1 ; VRAM bank 0
 
 	ldx #8
 	ldy #0
@@ -26,11 +22,7 @@ loop1:	lda (2),y
 	dex
 	bne loop1
 
-	lda #$11
-	sta verahi
-	lda #0
-	sta veramid
-	sta veralo
+	+vset $10000 | AUTO_INC_1 ; VRAM bank 1
 
 	ldx #14
 	ldy #0
@@ -46,12 +38,7 @@ loop2:	lda (2),y
 	dex
 	bne loop2
 
-	lda #$14
-	sta verahi
-	lda #$02
-	sta veramid
-	lda #0
-	sta veralo
+	+vset vreg_pal | AUTO_INC_1
 
 	ldx #2
 	ldy #0
@@ -67,11 +54,7 @@ loop3:	lda (2),y
 	dex
 	bne loop3
 
-	lda #$14
-	sta verahi
-	lda #0
-	sta veramid
-	sta veralo
+	+vset vreg_lay1 | AUTO_INC_1
 
 	lda #4 << 5 | 1; mode=4, enabled=1
 	sta veradat
