@@ -6,8 +6,6 @@
 
 	+video_init
 
-	+vstore $048000
-
 ; enable sprites
 	lda #1
 	+vstore vreg_spr

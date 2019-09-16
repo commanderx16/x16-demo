@@ -58,12 +58,14 @@ int sin[] = {
 };
 
 struct VERA_t {
-    uint8_t hi;
-    uint8_t mid;
     uint8_t lo;
+    uint8_t mid;
+    uint8_t hi;
     uint8_t data1;
     uint8_t data2;
     uint8_t ctrl;
+    uint8_t ien;
+    uint8_t isr;
 };
 
 #define VERA (*(volatile struct VERA_t*) 0x9f20)
@@ -87,10 +89,13 @@ static void irq()
     uint8_t j = ofs;
     uint8_t i;
 
+    // clear interrupt flags
+    VERA.isr = 1;
+
     // update sprite y coordinate
     for (i = 0; i < SPRITE_COUNT; i++) {
         uint16_t adr = i * 8;
-        vpoke(4, 0x804 + adr, 80 + sin[j]);
+        vpoke(0xf, 0x5004 + adr, 80 + sin[j]);
         j += 4;
         if (j > 55) j -= 56;
     }
@@ -115,17 +120,15 @@ int main(void)
     // switch back to uppercase character set
     __asm__("lda #$8e");
     __asm__("jsr BSOUT");
-
+    
     // disable interrupts
     __asm__("sei");
 
-    // bad hack: redefine CC65 stack from $0xa800-0xaff, should be a proper x16 custom target
-    *((uint8_t*) 0x02) = 0x00;
-    *((uint8_t*) 0x03) = 0xb0;
-
+    // bad hack: redefine CC65 stack to $0xa800-0xafff, should be a proper x16 custom target
+    *((uint16_t*) 0x02) = 0xb000;
+    
     // set new interrupt function
-    *((uint8_t*) 0x0314) = (uint8_t) (((uint16_t) irq) & 0xff);
-    *((uint8_t*) 0x0315) = (uint8_t) ((((uint16_t) irq) >> 8) & 0xff);
+    *((uint16_t*) 0x0314) = (uint16_t) irq;
     
     // initialize sprite information
     for (i = 0; i < SPRITE_COUNT; i++) {
@@ -133,35 +136,35 @@ int main(void)
         uint16_t x = i * 30 + 20;
 
         // address 12:5
-        vpoke(4, 0x800 + adr, 0);
+        vpoke(0xf, 0x5000 + adr, 0);
 
         // address 16:13 (starting at 0x10000) and 8 bpp mode
-        vpoke(4, 0x801 + adr, 0x88);
+        vpoke(0xf, 0x5001 + adr, 0x88);
 
         // x coordinate 7:0
-        vpoke(4, 0x802 + adr, (x & 0xff));
+        vpoke(0xf, 0x5002 + adr, (x & 0xff));
 
         // x coordinate 9:8
-        vpoke(4, 0x803 + adr, x >> 8);
+        vpoke(0xf, 0x5003 + adr, x >> 8);
 
         // y coordinate 7:0
-        vpoke(4, 0x804 + adr, 0);
+        vpoke(0xf, 0x5004 + adr, 0);
 
         // y coordinate 9:8
-        vpoke(4, 0x805 + adr, 0);
+        vpoke(0xf, 0x5005 + adr, 0);
 
-        // z-depth: in front of layer 2, 16 bpp
-        vpoke(4, 0x806 + adr, 0x0c);
+        // z-depth: in front of layer 2
+        vpoke(0xf, 0x5006 + adr, 0x0c);
 
         // 64 pixels for width and height
-        vpoke(4, 0x807 + adr, 0xf0);
+        vpoke(0xf, 0x5007 + adr, 0xf0);
     }
     
     // copy balloon sprite data to video RAM
     for (i = 0; i < 64*64; i++) vpoke(1, i, balloon[i]);
 
     // enable sprites
-    vpoke(4, 0x20, 1);
+    vpoke($f, 0x4000, 1);
     
     // enable interrupts
     __asm__("cli");

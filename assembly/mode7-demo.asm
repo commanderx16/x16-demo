@@ -6,11 +6,7 @@
 
 	+video_init
 
-	lda #$10
-	sta verahi
-	lda #0
-	sta veramid
-	sta veralo
+	+vset 0 | AUTO_INC_1
 
 	ldx #$88
 	ldy #0
@@ -26,12 +22,7 @@ loop1:	lda (2),y
 	dex
 	bne loop1
 
-	lda #$14
-	sta verahi
-	lda #$02
-	sta veramid
-	lda #0
-	sta veralo
+	+vset vreg_pal | AUTO_INC_1
 
 	ldx #2
 	ldy #0
@@ -47,11 +38,7 @@ loop3:	lda (2),y
 	dex
 	bne loop3
 
-	lda #$14
-	sta verahi
-	lda #0
-	sta veramid
-	sta veralo
+	+vset vreg_lay1 | AUTO_INC_1
 
 	lda #7 << 5 | 1; // mode=7, enabled=1
 	sta veradat ; 0
@@ -66,8 +53,8 @@ loop3:	lda (2),y
 	lda #0 >> 10;
 	sta veradat ; 5
 
-	lda #$41
-	sta veralo
+	+vset vreg_cmp + 1 | AUTO_INC_1
+
 	lda #64
 	sta veradat ; hscale=2x
 	sta veradat ; vscale=2x
