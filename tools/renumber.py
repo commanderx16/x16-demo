@@ -6,7 +6,7 @@ import sys,re
 from pathlib import Path
 
 LINE_FINDER=re.compile("([0-9]+)", re.IGNORECASE)
-GOTO_FINDER=re.compile("GOTO ([0-9]+)", re.IGNORECASE)
+
 
 def collect_numbers(fname, increment=100):
     old2new={}    
@@ -31,27 +31,35 @@ def renumber_file(fname,old2new, postfix=".new"):
                     new_number=old2new[int(possibile_number[0])]
                     ## renumbered_line=re.sub("([0-9]+) ",str(new_number)+" ",current_line,count=1)           
                     renumbered_line=LINE_FINDER.sub(str(new_number),current_line,count=1)                    
-                    #print(current_line," ->", renumbered_line)
+                    print(current_line," ->", renumbered_line)
                     dest.write(renumbered_line)
                 else:
                     dest.write(current_line)
     return dest_filename
 
-def fix_goto(fname,old2new):
+def fix_goto_gosub(fname,old2new):
+    """
+    A second pass is needed to correct the GOTO/GOSUB
+    This code should also work with on... goto 
+    """
+    GOTO_FINDER=re.compile(r'GO(TO|SUB| TO) ([0-9]+)([:]*)', re.IGNORECASE)
     temp_filename=fname+".tmp"
     with open(temp_filename, "w") as dest:
         with open(fname,"r") as source:
             for current_line in source:
                 possible_goto=GOTO_FINDER.findall(current_line)
-                if(len(possible_goto)>=1):
-                    dest_line=current_line                    
-                    for candidate in possible_goto:
-                        new_goto_number=old2new[int(candidate)]
-                        dest_line=GOTO_FINDER.sub("GOTO "+str(new_goto_number),dest_line,count=1)
-                        print(candidate, "->",new_goto_number, dest_line)
-                else:
-                    dest_line=current_line
-                dest.write(dest_line)    
+                #print("L", current_line)
+                dest_line=current_line.rstrip("\n\r")
+                for m in GOTO_FINDER.finditer(current_line.rstrip("\n\r")):
+                    goto_str=m.group(1)
+                    old_line=int(m.group(2))
+                    new_goto_number=old2new[old_line]
+                    # Compose the new GO TO GOSUB etc
+                    new_goto="GO"+m.group(1)+" "+str(new_goto_number)+m.group(3)
+                    # Single replace
+                    dest_line=dest_line.replace(m.group(0), new_goto,1)
+                    print ("s/"+m.group(0)+"/"+new_goto+"/",dest_line)
+                dest.write(dest_line+"\n")    
     return (Path(temp_filename)).replace(fname)
                 
 
@@ -61,8 +69,7 @@ def renumber(flist):
         old2new=collect_numbers(fname)
         print(old2new)
         dest_filename=renumber_file(fname,old2new)
-        fix_goto(dest_filename,old2new)
-        #fix_gosub(fname,old2new)
+        fix_goto_gosub(dest_filename,old2new)
 
 if __name__ == "__main__":
     renumber(sys.argv[1:])
