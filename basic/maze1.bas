@@ -1,0 +1,6 @@
+
+10 PRINT CHR$(205.50+RND(1)); : GOTO 10
+20 GOTO 10: GOTO 20
+
+
+
