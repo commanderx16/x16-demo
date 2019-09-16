@@ -164,7 +164,7 @@ int main(void)
     for (i = 0; i < 64*64; i++) vpoke(1, i, balloon[i]);
 
     // enable sprites
-    vpoke($f, 0x4000, 1);
+    vpoke(0xf, 0x4000, 1);
     
     // enable interrupts
     __asm__("cli");
