@@ -65,21 +65,23 @@ im = Image.open(args.input)
 p = np.array(im)
 
 # convert to sprite data
+i = 0
 with open(args.output, "w") as file:
     if args.f == 'c':
         file.write("uint8_t %s[] = {\n" % args.n)
     if args.f == 'acme':
         file.write("%s:\n" % args.n)
-    i = 0
     if args.f == 'basic':
         line = int(args.n)
     for y in range(im.height):
-        if args.f == 'acme':
-            file.write("    !byte ")
-        if args.f == 'basic':
-            file.write("%i DATA " % line)
-            line = line + 1
         for x in range(im.width):
+            if i == 0:
+                if args.f == 'acme':
+                    file.write("    !byte ")
+                if args.f == 'basic':
+                    file.write("%i DATA " % line)
+                    line = line + 1
+
             # get pixel color
             r, g, b, a = p[y][x]
 
@@ -109,12 +111,17 @@ with open(args.output, "w") as file:
                 file.write("0x%02x," % best)
             if args.f == 'acme':
                 file.write("$%02x" % best)
-                if x < im.width - 1:
+                if i < 15:
                     file.write(",")
             if args.f == 'basic':
                 file.write("%i" % best)
-                if x < im.width - 1:
+                if i < 15:
                     file.write(",")
+            i = i + 1
+            if i == 16:
+                file.write("\n")
+                i = 0
+    if i != 0:
         file.write("\n")
     if args.f == 'c':
         file.write("};")
