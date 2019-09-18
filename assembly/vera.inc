@@ -79,7 +79,7 @@ AUTO_INC_1 = $100000
 	lda #0
 	sta veractl ; set ADDR1 active
 	sta veramid
-	lda #$1F    ; $40040
+	lda #$1F    ; $F0000 increment 1
 	sta verahi
 	lda #$00
 	sta veralo
