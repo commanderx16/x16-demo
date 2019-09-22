@@ -46,13 +46,13 @@ for f in os.listdir(args.input):
         prg = prg + ".TMP"
 
         # read BASIC text file
-        with codecs.open(basFilename, "r", "iso-8859-1") as input:
+        with codecs.open(basFilename, "rb") as input:
             bas = input.read()
 
         # add SAVE and exit command, and save as temporary file
-        bas = bas + '\nSAVE "' + prg + '\nSYS $FFFF\n"'
+        bas = bas + ('\nSAVE "' + prg + '\nSYS $FFFF\n"').encode('iso-8859-1')
         tempFilename = args.input + ".tmp"
-        with open(tempFilename, "w") as output:
+        with open(tempFilename, "wb") as output:
             output.write(bas)
 
         # call the emulator to create the PRG file
