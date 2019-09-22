@@ -12,6 +12,7 @@ all: $(SUBDIRS)
 	cp basic-sprite/smiley.bas release/basic
 	cp basic/* release/basic
 	cp "layer demo/layer-demo.bas" release/basic
+	./tools/bas2prg.py ../x16-emulator/x16emu ./release/basic ./release/PRG
 	cd release/PRG ; python -c 'import os, sys; [os.rename(a, a.upper()) for a in sys.argv[1:]]' *
 
 $(SUBDIRS):
