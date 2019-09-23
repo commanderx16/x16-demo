@@ -25,7 +25,6 @@
 // YM2151 audio demo
 
 #include <stdint.h>
-#include <cbm.h>
 
 #include "test.inc"
 
