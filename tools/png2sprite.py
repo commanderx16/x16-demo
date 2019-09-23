@@ -62,6 +62,7 @@ default_palette.reverse()
 
 # load image
 im = Image.open(args.input)
+im = im.convert('RGBA')
 p = np.array(im)
 
 # convert to sprite data
