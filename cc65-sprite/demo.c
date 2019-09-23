@@ -32,12 +32,7 @@
 //
 // See Makefile how to compile it and how to convert a PNG image to a C array.
 
-#include <stdio.h>
-#include <string.h>
 #include <stdint.h>
-#include <conio.h>
-#include <stdlib.h>
-#include <cbm.h>
 
 #include "balloon.inc"
 
