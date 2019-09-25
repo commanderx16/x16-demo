@@ -29,13 +29,13 @@
 #include "test.inc"
 
 struct YM2151_t {
-    uint8_t data;
     uint8_t reg;
+    uint8_t data;
 };
 
 #define YM2151 (*(volatile struct YM2151_t*) 0x9fe0)
 
-void wait(uint16_t samples)
+static void wait(uint16_t samples)
 {
     uint16_t i;
     for (i = 0; i < samples; i++) {
@@ -76,66 +76,79 @@ void wait(uint16_t samples)
     }
 }
 
+static void main2()
+{
+    // simple VGM player
+    uint16_t i = 0;
+    uint8_t run = 1;
+    
+    // disable interrupts
+    __asm__("sei");
+
+    // calculate absolute data offset
+    i = test[0x34];
+    i |= test[0x35] << 8;
+    i += 0x34;
+    
+    while (run) {
+        uint8_t cmd = test[i++];
+        switch (cmd) {
+            case 0x54:
+            {
+                YM2151.reg = test[i++];
+                YM2151.data = test[i++];
+                break;
+            }
+            case 0x61:
+            {
+                uint16_t n = test[i++];
+                n += test[i++] << 8;
+                wait(n);
+                break;
+            }
+            case 0x62:
+            {
+                wait(735);
+                break;
+            }
+            case 0x63:
+            {
+                wait(882);
+                break;
+            }
+            case 0x66:
+            {
+                //printf("end\n");
+                run = 0;
+                break;
+            }
+            default:
+            {
+                if (cmd >= 0x70 && cmd <= 0x7f) {
+                    wait(cmd & 0xf);
+                } else {
+                    //printf("unknown command: %i\n", cmd);
+                }
+                break;
+            }
+        }
+    }
+
+    // enable interrupts
+    __asm__("cli");
+}
+
 int main(void)
 {
     // switch back to uppercase character set
     __asm__("lda #$8e");
     __asm__("jsr BSOUT");
     
-    // disable interrupts
-    __asm__("sei");
-
     // bad hack: redefine CC65 stack to $0xa800-0xafff, should be a proper x16 custom target
     *((uint16_t*) 0x02) = 0xb000;
     
-    // simple VGM player
-    {
-        uint16_t i = 0x40;
-        uint8_t run = 1;
-        while (run) {
-            uint8_t cmd = test[i++];
-            switch (cmd) {
-                case 0x54:
-                {
-                    YM2151.reg = test[i++];
-                    YM2151.data = test[i++];
-                    break;
-                }
-                case 0x61:
-                {
-                    uint16_t n = test[i++];
-                    n += test[i++] << 8;
-                    wait(n);
-                    break;
-                }
-                case 0x62:
-                {
-                    wait(735);
-                    break;
-                }
-                case 0x63:
-                {
-                    wait(882);
-                    break;
-                }
-                case 0x66:
-                {
-                    //printf("end\n");
-                    run = 0;
-                    break;
-                }
-                default:
-                {
-                    if (cmd >= 0x70 && cmd <= 0x7f) {
-                        wait(cmd & 0xf);
-                    } else {
-                        //printf("unknown command: %i\n", cmd);
-                    }
-                    break;
-                }
-            }
-        }
-    }
+    // call new main function, because local variables are not valid anymore after the stack change
+    main2();
     
 	return 0;
 }
