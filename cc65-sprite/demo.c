@@ -33,18 +33,20 @@
 // See Makefile how to compile it and how to convert a PNG image to a C array.
 
 #include <stdint.h>
+#include <6502.h>
 
 #include "balloon.inc"
 
 #define SPRITE_COUNT 16
 
 /*
+Python script to generate the table:
 import math
 cycle=56
 ampl=50
 [int(math.sin(i/cycle*2*math.pi)*ampl+0.5) for i in range(cycle)]
 */
-int sin[] = {
+static int sin[] = {
 	0, 6, 11, 17, 22, 27, 31, 35, 39, 42, 45, 47, 49, 50, 50,
 	50, 49, 47, 45, 42, 39, 35, 31, 27, 22, 17, 11, 6, 0, -5,
 	-10, -16, -21, -26, -30, -34, -38, -41, -44, -46, -48, -49,
@@ -79,7 +81,7 @@ static void vpoke(uint8_t bank, uint16_t address, uint8_t data)
     VERA.data1 = data;
 }
 
-static void irq()
+static unsigned char irq()
 {
     uint8_t j = ofs;
     uint8_t i;
@@ -100,31 +102,13 @@ static void irq()
     if (ofs == 56) ofs = 0;
     
     // return from interrupt
-    __asm__("PLA");
-    __asm__("TAY");
-    __asm__("PLA");
-    __asm__("TAX");
-    __asm__("PLA");
-    __asm__("RTI");
+    return IRQ_HANDLED;
 }
 
-int main(void)
+static void main2()
 {
     uint16_t i = 0;
-    
-    // switch back to uppercase character set
-    __asm__("lda #$8e");
-    __asm__("jsr BSOUT");
-    
-    // disable interrupts
-    __asm__("sei");
 
-    // bad hack: redefine CC65 stack to $0xa800-0xafff, should be a proper x16 custom target
-    *((uint16_t*) 0x02) = 0xb000;
-    
-    // set new interrupt function
-    *((uint16_t*) 0x0314) = (uint16_t) irq;
-    
     // initialize sprite information
     for (i = 0; i < SPRITE_COUNT; i++) {
         uint16_t adr = i * 8;
@@ -161,11 +145,25 @@ int main(void)
     // enable sprites
     vpoke(0xf, 0x4000, 1);
     
-    // enable interrupts
-    __asm__("cli");
-
+    // set new interrupt function
+    // needs different local stack from 0xa000 to 0xa7ff, because the stack functions are not reentrant
+    set_irq(irq, (void*) 0xa800, 0x0800);
+    
     // the rest runs in the interrupt
     while (1);
+}
+
+int main()
+{
+    // switch back to uppercase character set
+    __asm__("lda #$8e");
+    __asm__("jsr BSOUT");
+    
+    // bad hack: redefine CC65 stack to $0xa800-0xafff, should be a proper x16 custom target
+    *((uint16_t*) 0x02) = 0xb000;
+    
+    // call new main function, because local variables are not valid anymore after the stack change
+    main2();
     
 	return 0;
 }
