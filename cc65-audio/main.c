@@ -22,11 +22,14 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// YM2151 audio demo
+// YM2151 VGM player
 
 #include <stdint.h>
+#include <stdio.h>
+#include <conio.h>
+#include <6502.h>
 
-#include "test.inc"
+#include "vgm.inc"
 
 struct YM2151_t {
     uint8_t reg;
@@ -35,120 +38,140 @@ struct YM2151_t {
 
 #define YM2151 (*(volatile struct YM2151_t*) 0x9fe0)
 
+static uint8_t run;
+static uint16_t ofs, start;
+
 static void wait(uint16_t samples)
 {
+    // assumes 60 Hz VGM files
+    uint16_t frames = samples / 735;
+    
+    while (frames--) waitvsync();
+}
+
+static void resetYM2151()
+{
     uint16_t i;
-    for (i = 0; i < samples; i++) {
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
-        __asm__("nop");
+    for (i = 0; i < 256; i++) {
+        YM2151.reg = i;
+        YM2151.data = 0;
     }
 }
 
-static void main2()
+char* readWideString(uint16_t* pos)
 {
-    // simple VGM player
-    uint16_t i = 0;
-    uint8_t run = 1;
-    
-    // disable interrupts
-    __asm__("sei");
+    static uint8_t buf[256];
+    uint8_t i = 0;
+    while (1) {
+        uint16_t wc = vgmData[*pos];
+        (*pos)++;
+        wc |= vgmData[*pos];
+        (*pos)++;
+        if (wc >= 65 && wc <= 90) {
+            wc += 32;
+        } else if (wc >= 97 && wc <= 122) {
+            wc -= 32;
+        }
+        buf[i++] = wc;
+        if (wc == 0) break;
+    }
+    return buf;
+}
 
-    // calculate absolute data offset
-    i = test[0x34];
-    i |= test[0x35] << 8;
-    i += 0x34;
-    
-    while (run) {
-        uint8_t cmd = test[i++];
-        switch (cmd) {
-            case 0x54:
-            {
-                YM2151.reg = test[i++];
-                YM2151.data = test[i++];
-                break;
-            }
-            case 0x61:
-            {
-                uint16_t n = test[i++];
-                n += test[i++] << 8;
-                wait(n);
-                break;
-            }
-            case 0x62:
-            {
-                wait(735);
-                break;
-            }
-            case 0x63:
-            {
-                wait(882);
-                break;
-            }
-            case 0x66:
-            {
-                //printf("end\n");
-                run = 0;
-                break;
-            }
-            default:
-            {
-                if (cmd >= 0x70 && cmd <= 0x7f) {
-                    wait(cmd & 0xf);
-                } else {
-                    //printf("unknown command: %i\n", cmd);
+void play()
+{
+    while (1) {
+        ofs = start;
+        run = 1;
+        while (run) {
+            uint8_t cmd = vgmData[ofs++];
+            switch (cmd) {
+                case 0x54:
+                {
+                    YM2151.reg = vgmData[ofs++];
+                    YM2151.data = vgmData[ofs++];
+                    break;
                 }
-                break;
+                case 0x61:
+                {
+                    uint16_t n = vgmData[ofs++];
+                    n += vgmData[ofs++] << 8;
+                    wait(n);
+                    break;
+                }
+                case 0x62:
+                {
+                    wait(735);
+                    break;
+                }
+                case 0x63:
+                {
+                    wait(882);
+                    break;
+                }
+                case 0x66:
+                {
+                    run = 0;
+                    break;
+                }
+                case 0xc0:
+                {
+                    // ignore Sega PCM write
+                    ofs += 3;
+                    break;
+                }
+                default:
+                {
+                    if (cmd >= 0x70 && cmd <= 0x7f) {
+                        wait(cmd & 0xf);
+                    } else {
+                        printf("unknown command: $%02x\n", cmd);
+                    }
+                    break;
+                }
+            }
+            if (kbhit()) {
+                cgetc();
+                return;
             }
         }
     }
-
-    // enable interrupts
-    __asm__("cli");
 }
 
-int main(void)
+int main()
 {
-    // switch back to uppercase character set
-    __asm__("lda #$8e");
-    __asm__("jsr BSOUT");
+    uint16_t gd3;
     
-    // bad hack: redefine CC65 stack to $0xa800-0xafff, should be a proper x16 custom target
-    *((uint16_t*) 0x02) = 0xb000;
+    resetYM2151();
+    clrscr();
+    printf("\nVGM player by Frank Buss\n\n");
+
+    // calculate absolute data offset
+    start = vgmData[0x34];
+    start |= vgmData[0x35] << 8;
+    start += 0x34;
     
-    // call new main function, because local variables are not valid anymore after the stack change
-    main2();
+    // calculate GD3 offset
+    gd3 = vgmData[0x14];
+    gd3 |= vgmData[0x15] << 8;
     
-	return 0;
+    // parse GD3 info
+    if (gd3) {
+        gd3 += 29;
+        readWideString(&gd3);
+        printf(" Song title : %s\n", readWideString(&gd3));
+        readWideString(&gd3);
+        readWideString(&gd3);
+        readWideString(&gd3);
+        readWideString(&gd3);
+        readWideString(&gd3);
+        printf(" Author name: %s\n", readWideString(&gd3));
+    }
+    
+    // play song until key press
+    printf("\npress any key to stop\n");
+    play();
+    resetYM2151();
+
+    return 0;
 }
