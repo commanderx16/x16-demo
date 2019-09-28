@@ -25,10 +25,10 @@
 
 // Demonstrates how to initialize and move sprites with cc65, synchronized
 // to the VSync interrupt.
-// Tested with cc65 V2.18.
+// Tested with the latest unreleased cc65, V2.18 - Git 18afc7c7
 //
 // Generate assembler listing to demo.txt:
-// cl65 -t c64 -O -l demo.txt demo.c
+// cl65 -t cx16 -O -l demo.txt demo.c
 //
 // See Makefile how to compile it and how to convert a PNG image to a C array.
 
