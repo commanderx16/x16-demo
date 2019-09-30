@@ -41,6 +41,27 @@ struct YM2151_t {
 static uint8_t run;
 static uint16_t ofs, start;
 
+static void vpoke(uint8_t bank, uint16_t address, uint8_t data)
+{
+    // address selection 0
+    VERA.control = 0;
+    // set address
+    VERA.address_hi = bank;
+    VERA.address = address;
+    // store data with data port 0
+    VERA.data0 = data;
+}
+
+static void startWrite()
+{
+    vpoke(0xf, 0x100c, 0);
+}
+
+static void endWrite()
+{
+    vpoke(0xf, 0x100c, 15);
+}
+
 static void wait(uint16_t samples)
 {
     // assumes 60 Hz VGM files
@@ -49,12 +70,26 @@ static void wait(uint16_t samples)
     while (frames--) waitvsync();
 }
 
+static void writeYM2151Reg(uint8_t reg, uint8_t value)
+{
+    uint8_t i;
+    YM2151.reg = reg;
+    YM2151.data = value;
+    
+    // delay between writes must be at least 64 YM2151 cyclces, which is
+    // 224 cyckes if tge 6502, if it runs at 14 MHz, and the YM2151 at 4 MHz.
+    // The function and call needs about 50 cycles. One loop 22 cycles.
+    // Add some reserve in case CC65 optimizes it better in future versions.
+    for (i = 0; i < 10; i++) {
+        asm("nop");
+    }
+}
+
 static void resetYM2151()
 {
     uint16_t i;
     for (i = 0; i < 256; i++) {
-        YM2151.reg = i;
-        YM2151.data = 0;
+        writeYM2151Reg(i, 0);
     }
 }
 
@@ -85,27 +120,32 @@ void play()
         run = 1;
         while (run) {
             uint8_t cmd = vgmData[ofs++];
+            startWrite();
             switch (cmd) {
                 case 0x54:
                 {
-                    YM2151.reg = vgmData[ofs++];
-                    YM2151.data = vgmData[ofs++];
+                    uint8_t reg = vgmData[ofs++];
+                    uint8_t value = vgmData[ofs++];
+                    writeYM2151Reg(reg, value);
                     break;
                 }
                 case 0x61:
                 {
                     uint16_t n = vgmData[ofs++];
                     n += vgmData[ofs++] << 8;
+                    endWrite();
                     wait(n);
                     break;
                 }
                 case 0x62:
                 {
+                    endWrite();
                     wait(735);
                     break;
                 }
                 case 0x63:
                 {
+                    endWrite();
                     wait(882);
                     break;
                 }
@@ -123,6 +163,7 @@ void play()
                 default:
                 {
                     if (cmd >= 0x70 && cmd <= 0x7f) {
+                        endWrite();
                         wait(cmd & 0xf);
                     } else {
                         printf("unknown command: $%02x\n", cmd);
@@ -171,6 +212,7 @@ int main()
     // play song until key press
     printf("\npress any key to stop\n");
     play();
+    endWrite();
     resetYM2151();
 
     return 0;
