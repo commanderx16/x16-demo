@@ -63,6 +63,3 @@ for f in os.listdir(args.input):
 
         # remove the temporary file
         os.remove(tempFilename)
-
-        # remove memory dump created by the emulator
-        os.remove('memory.bin')
