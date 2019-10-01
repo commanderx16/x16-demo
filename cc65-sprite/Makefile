@@ -1,10 +1,11 @@
+.PHONY: all clean
 all: demo.prg
 
 demo.prg: demo.c balloon.inc
-	cl65 -t cx16 -O -o demo.prg demo.c
+	cl65 -t cx16 -O -o $@ $<
 
 balloon.inc: balloon.png
-	python3 ../tools/png2sprite.py -n balloon balloon.png balloon.inc
-	
+	python3 ../tools/png2sprite.py -n balloon $< $@
+
 clean:
-	rm -f *.prg *.inc *.o
+	rm -f *.inc *.o *.prg
