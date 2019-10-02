@@ -2,7 +2,6 @@
 ;by David Murray 2019
 ;dfwgreencars@gmail.com
 
-!to "PETDRAWX16.PRG",cbm
 
 *=$0801               ;START ADDRESS IS $0801
 VERA_INC=$9F22
