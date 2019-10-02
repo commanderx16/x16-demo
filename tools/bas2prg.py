@@ -50,7 +50,7 @@ for f in os.listdir(args.input):
             bas = input.read()
 
         # add SAVE and exit command, and save as temporary file
-        bas = bas + ('\nSAVE "' + prg + '\nSYS $FFFF\n"').encode('iso-8859-1')
+        bas = bas + ('\nSAVE "' + prg + '\nPOKE $9FB4,0\nSYS $FFFF\n"').encode('iso-8859-1')
         tempFilename = args.input + ".tmp"
         with open(tempFilename, "wb") as output:
             output.write(bas)
