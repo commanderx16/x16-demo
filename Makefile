@@ -1,4 +1,4 @@
-SUBDIRS := assembly basic-sprite cc65-audio cc65-sprite
+SUBDIRS := petdrawx16 assembly basic-sprite cc65-audio cc65-sprite
 
 all: $(SUBDIRS)
 	rm -rf release

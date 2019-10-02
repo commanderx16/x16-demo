@@ -1,0 +1,3 @@
+# Ignore binary files: they muts be build during release
+
+*.prg

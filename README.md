@@ -17,3 +17,9 @@ The tools/ directory contains:
 + requirements.txt - Python requirements for the tools. Use with "pip3 install -r requirements.txt"
 
 
+# How to compile asm files
+The Makefile need the acme compiler.
+
+Install the acme compiler from 
+wget https://github.com/meonwax/acme/archive/master.zip
+and the cc65 toolchain (needed for some files)
