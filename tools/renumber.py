@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+
 # Renumber a BASIC PROGRAM.
 # Manage GOTO AND GOSUB Calls too
 
