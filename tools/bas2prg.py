@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # Copyright (c) 2019, Frank Buss
 # All rights reserved.
