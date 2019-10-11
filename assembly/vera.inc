@@ -1,3 +1,5 @@
+; License: Public Domain
+
 !if MACHINE_C64 = 1 {
 	verareg =$df00
 } else {
