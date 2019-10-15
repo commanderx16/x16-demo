@@ -41,6 +41,6 @@ Please follow these steps to have your contribution considered by the maintainer
 ## Documentation
 For documentation download a copy of the [Commander X16 Programmers Reference](https://github.com/commanderx16/x16-docs).
 
-Commander X16 has a BASIC V2 version derivered from the C/64 one. It will grow and offer more commands in the future.
+Commander X16 has a BASIC V2 version derived from the C/64 one. It will grow and offer more commands in the future.
 
 Take a look at [Commander X16 Roms project](https://github.com/commanderx16/x16-rom) for a short introduction to the Basic and Kernel services.
