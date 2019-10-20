@@ -41,7 +41,7 @@
 
 // Setup some things before we get going
 setup:
-  // Disable interrupts so we do not get distracted setting up code
+  // Disable interrupts so we do not get distracted while setting up code
   sei
 
   jsr CINT  // Clear the screen
@@ -67,7 +67,6 @@ setup:
   sta PREVIOUS_ISR_HANDLER,x
   lda #<typing_irq
   sta ISR_HANDLER,x
-
   inx
   lda ISR_HANDLER,x
   sta PREVIOUS_ISR_HANDLER,x
@@ -79,10 +78,6 @@ setup:
      the VBLANK interupt */
   lda #VBLANK_MASK
   sta VERAIEN
-
-  // Set our string position to 0
-  ldx #0
-  stx STRING_POSITION
 
 // Main loop
 loop:
@@ -130,10 +125,10 @@ typing_irq:
   stx STRING_POSITION
 
 typing_irq_end:
-  /* Jump to the previous ISR handler. Not the use of indirect addressing. */
+  /* Jump to the previous ISR handler. Note the use of indirect addressing. */
   jmp (PREVIOUS_ISR_HANDLER)
 
-/* Message to display on screen. Since we use a string pointed, it has to be
+/* Message to display on screen. Since we use a string pointer, it has to be
    less than 255. */
 msg:  .text "ALL WORK AND NO PLAY MAKES JACK A DULL BOY. "
       .byte RETURN
