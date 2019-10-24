@@ -4,7 +4,7 @@
 40 IF (C>=$20 AND C<=$7F) OR (C>=$A0 AND C<=$FF) THEN CH$ = CHR$(C)
 50 IF X>0 THEN GOTO 90
 60 IF Y<10 THEN GOTO 70
-64 PRINT " ";CHR$(Y+$37);"  ";CH$;" ";
+65 PRINT " ";CHR$(Y+$37);"  ";CH$;" ";
 67 GOTO 100
 70 PRINT Y;" ";CH$;" ";
 80 GOTO 100
