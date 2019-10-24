@@ -41,25 +41,14 @@ struct YM2151_t {
 static uint8_t run;
 static uint16_t ofs, start;
 
-static void vpoke(uint8_t bank, uint16_t address, uint8_t data)
-{
-    // address selection 0
-    VERA.control = 0;
-    // set address
-    VERA.address_hi = bank;
-    VERA.address = address;
-    // store data with data port 0
-    VERA.data0 = data;
-}
-
 static void startWrite()
 {
-    vpoke(0xf, 0x100c, 0);
+    vpoke(0, 0x0f100c);
 }
 
 static void endWrite()
 {
-    vpoke(0xf, 0x100c, 15);
+    vpoke(15, 0x0f100c);
 }
 
 static void wait(uint16_t samples)
