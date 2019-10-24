@@ -61,16 +61,6 @@ static const int sin[] = {
     -28, -26, -23, -20, -17, -14, -11, -8, -5, -2
 };
 
-static void vpoke(uint8_t bank, uint16_t address, uint8_t data)
-{
-    // Set port 0's address.
-    VERA.control = 0;
-    VERA.address_hi = bank;
-    VERA.address = address;
-    // Store data through port 0.
-    VERA.data0 = data;
-}
-
 void main(void)
 {
     uint16_t i, x;
@@ -79,15 +69,16 @@ void main(void)
     // Switch back to the uppercase character set.
     cbm_k_bsout(CH_FONT_UPPER);
 
-    // Initialize the sprite information.
+    // Initialize the sprites' information.
     for (i = 0; i < SPRITE_COUNT; i++) {
         x = i * SPRITE_X_SPACING + SPRITE_X_START;
 
-        // Set the address to increment with each access.
-        // Address bits 12:5
-        vpoke(0x1F, 0x5000 + i * 8, (0x010000 >> 5) & 0xFF);
+        // Inside address bits 12:5.
+        // Set the outside address to increment with each access.
+        vpoke((0x010000 >> 5) & 0xFF, 0x1F5000 + i * 8);
 
-        // Address bits 16:13 (starting at 0x010000) and 8 BPP mode
+        // 8 Bits-Per-Pixel mode (sprites can have 256 colors).
+        // Inside address bits 16:13 (sprite pattern starts at 0x010000).
         VERA.data0 = (1 << 7) | (0x010000 >> 13);
 
         // x co-ordinate, bits 7:0
@@ -111,12 +102,12 @@ void main(void)
 
     // Copy the balloon sprite data into the video RAM.
     // Set the address to increment with each access.
-    vpoke(0x11, 0x0000, balloon[0]);
+    vpoke(balloon[0], 0x110000);
     for (i = 0; ++i < 64*64; )
         VERA.data0 = balloon[i];
 
     // Enable the sprites.
-    vpoke(0x0F, 0x4000, 0x01);
+    vpoke(0x01, 0x0F4000);
 
     // Animate those sprites.
     puts("\npress any key to stop.");
@@ -128,7 +119,7 @@ void main(void)
 
         // Update the sprites' y co-ordinates.
         for (i = 0; i < SPRITE_COUNT * 8; i += 8) {
-            vpoke(0x0F, 0x5004 + i, 80 + sin[j]);
+            vpoke(80 + sin[j], 0x0F5004 + i);
             j += 4;
             if (j > 99)
                 j -= 100;
@@ -141,5 +132,5 @@ void main(void)
     cgetc();
 
     // Disable the sprites.
-    vpoke(0x0F, 0x4000, 0x00);
+    vpoke(0x00, 0x0F4000);
 }
