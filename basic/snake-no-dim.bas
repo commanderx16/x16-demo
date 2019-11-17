@@ -82,7 +82,7 @@
 820 RETURN
 830 REM --------------------------------
 840 REM SETCOLOR(FG,BG)
-850 POKE 646, (BG AND $F) * 16 + (FG AND $F)
+850 POKE 713, (BG AND $F) * 16 + (FG AND $F)
 860 RETURN
 870 REM --------------------------------
 880 REM PUTNEWFOOD()
