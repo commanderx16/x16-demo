@@ -11,10 +11,11 @@ How Can I Contribute?
 
 ## Reporting Bugs
 Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/).
+
 Before repoting a bug, ensure it is new, and add a short, simple way to reproduce it.
 
 ### Known issues
-#### Demo xyz is notworking on my emulator.
+#### Demo xyz is not working on my emulator.
 Because the emulator is growing faster, sometime the last pushed demo code need the last version of the emulator.
 
 If a code does not work (like sprites) download always the LAST version of the emulator **before submitting** a bug report.
@@ -28,7 +29,8 @@ Please follow these steps to have your contribution considered by the maintainer
 1. Contribute with source file ending in .bas extension (not binary). Filename must be without space and lowercase
 2. Bas file must be in ascii UTF-8 with uppercase letter 
 3. If needed renumber them using the renumber tool (see tools directory)
-4. if subrotudine, provide at least one usage example
+4. if subroutine, provide at least one usage example
+
 5. Do not forget to add AUTHOR AND LICENSE information in the head of the file via REMs
 
 ### For Assembly code:
@@ -41,6 +43,6 @@ Please follow these steps to have your contribution considered by the maintainer
 ## Documentation
 For documentation download a copy of the [Commander X16 Programmers Reference](https://github.com/commanderx16/x16-docs).
 
-Commander X16 has a BASIC V2 version derivered from the C/64 one. It will grow and offer more commands in the future.
+Commander X16 has a BASIC V2 version derived from the C/64 one. It will grow and offer more commands in the future.
+Take a look at [Commander X16 Roms project](https://github.com/commanderx16/x16-rom) for a short introduction to the Basic and Kernel services.
 
-Take a look at [Commandr X16 Roms project](https://github.com/commanderx16/x16-rom) for a short introduction to the Basic and Kernel services.

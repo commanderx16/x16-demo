@@ -38,6 +38,11 @@ loop3:	lda (2),y
 	dex
 	bne loop3
 
+	+vset vreg_lay2 | AUTO_INC_1
+
+	lda #0 ; disabled
+	sta veradat ; 0
+
 	+vset vreg_lay1 | AUTO_INC_1
 
 	lda #7 << 5 | 1; // mode=7, enabled=1

@@ -15,6 +15,9 @@ all: $(SUBDIRS)
 	./tools/bas2prg.py ../x16-emulator/x16emu ./release/basic ./release/PRG
 	cd release/PRG ; python -c 'import os, sys; [os.rename(a, a.upper()) for a in sys.argv[1:]]' *
 
+clean:
+	rm -rf release
+
 $(SUBDIRS):
 	$(MAKE) -C $@
 
