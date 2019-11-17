@@ -11,7 +11,8 @@ How Can I Contribute?
 
 ## Reporting Bugs
 Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/).
-Before reporting a bug, ensure it is new, and add a short, simple way to reproduce it.
+
+Before repoting a bug, ensure it is new, and add a short, simple way to reproduce it.
 
 ### Known issues
 #### Demo xyz is not working on my emulator.
@@ -29,6 +30,7 @@ Please follow these steps to have your contribution considered by the maintainer
 2. Bas file must be in ascii UTF-8 with uppercase letter 
 3. If needed renumber them using the renumber tool (see tools directory)
 4. if subroutine, provide at least one usage example
+
 5. Do not forget to add AUTHOR AND LICENSE information in the head of the file via REMs
 
 ### For Assembly code:
@@ -42,5 +44,5 @@ Please follow these steps to have your contribution considered by the maintainer
 For documentation download a copy of the [Commander X16 Programmers Reference](https://github.com/commanderx16/x16-docs).
 
 Commander X16 has a BASIC V2 version derived from the C/64 one. It will grow and offer more commands in the future.
-
 Take a look at [Commander X16 Roms project](https://github.com/commanderx16/x16-rom) for a short introduction to the Basic and Kernel services.
+
