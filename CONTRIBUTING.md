@@ -25,19 +25,19 @@ Please follow these steps to have your contribution considered by the maintainer
 ### For Basic files:
 
 1. Contribute with source file ending in .bas extension (not binary). Filename must be without space and lowercase
-1. Bas file must be in ASCII UTF-8 with uppercase letters 
-1. If needed renumber them using the renumber tool (see tools directory)
-1. If subroutine, provide at least one usage example
+2. Bas file must be in ASCII UTF-8 with uppercase letters 
+3. If needed renumber them using the renumber tool (see tools directory)
+4. If subroutine, provide at least one usage example
 
-1. Do not forget to add AUTHOR AND LICENSE information in the head of the file via REMs
+5. Do not forget to add AUTHOR AND LICENSE information in the head of the file via REMs
 
 ### For Assembly code:
 
 1. Group your code in one directory per project
-1. Include a Makefile per project
-1. Include the directory in the main Makefile, adding it to the SUBDIRS variable (first line) 
-1. Test it (see HOW TO COMPILE in the README.md)
-1. Do not forget to add AUTHOR AND LICENSE information in the head of the file via ';' comments
+2. Include a Makefile per project
+3. Include the directory in the main Makefile, adding it to the SUBDIRS variable (first line) 
+4. Test it (see HOW TO COMPILE in the README.md)
+5. Do not forget to add AUTHOR AND LICENSE information in the head of the file via ';' comments
 
 ## Documentation
 For documentation download a copy of the [Commander X16 Programmers Reference](https://github.com/commanderx16/x16-docs).
