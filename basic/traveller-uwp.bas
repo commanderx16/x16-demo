@@ -28,7 +28,7 @@
 176 Z$ = " ": REM ZONE (N/A)
 177 AL$ = "  ": REM ALLEG (N/A)
 180 REM ? CR$ Z$ NA$ UW$ BA$ " " BG$ " " RM$
-181 ? CR$ " " NA$ " " UW$ " " BA$ " " BG$ " " RM$
+181 ? CR$ " " UW$ " " BA$ " " RM$ " " BG$ " " NA$
 195 NEXT RI
 199 END
 
@@ -140,7 +140,8 @@
 535 IN$ = "A3A...-. FFA...-. OC":GOSUB 550
 536 IN$ = ".0....-. .0....-. VA":GOSUB 550
 537 IN$ = "33A...-. 9FA...-. WA":GOSUB 550
-545 RM$ = MID$(RM$,2): REM +"                ",2,15)
+545 REM RM$ = MID$(RM$,2): REM NON-PADDED
+546 RM$ = MID$(RM$+"                ",2,15):REM PADDED
 549 RETURN
 
 550 REM ------------------------
@@ -209,23 +210,24 @@
 1285 NA$ = NA$ + F$ : LN = LEN(NA$)
 1290 IF RIGHT$(NA$,1) = " " THEN NA$ = LEFT$(NA$,LN-1)
 1295 NEXT
-1298 NA$ = LEFT$(NA$+"               ",10)
+1298 REM NA$ = LEFT$(NA$+"               ",10) <- PADDING
 1299 RETURN 
 
 1300 REM ------------------------
 1301 REM DETERMINE BASES
 1302 REM ------------------------
-1310 GOSUB 260
-1315 N$ = " ":S$ = " ":BA=1
-1320 IF SP$ = "A" THEN N$ = MID$("NNNNN      ",D2,1)
-1321 IF SP$ = "B" THEN N$ = MID$("NNN        ",D2,1)
-1330 IF SP$ = "A" THEN S$ = MID$("SSS        ",D2,1)
-1331 IF SP$ = "B" THEN S$ = MID$("SSSS       ",D2,1)
-1332 IF SP$ = "C" THEN S$ = MID$("SSSSS      ",D2,1)
-1333 IF SP$ = "D" THEN S$ = MID$("SSSS       ",D2,1)
-1340 IF N$ = "N" THEN BA = BA + 1
-1341 IF N$ = "S" THEN BA = BA + 2
-1345 BA$ = MID$(" NSA",BA,1)
+1310 N$ = " ": GOSUB 260
+1311 IF SP$ = "A" THEN N$ = MID$("NNNNN      ",D2,1)
+1312 IF SP$ = "B" THEN N$ = MID$("NNN        ",D2,1)
+1320 S$ = " ": GOSUB 260
+1321 IF SP$ = "A" THEN S$ = MID$("SSS        ",D2,1)
+1322 IF SP$ = "B" THEN S$ = MID$("SSSS       ",D2,1)
+1323 IF SP$ = "C" THEN S$ = MID$("SSSSS      ",D2,1)
+1324 IF SP$ = "D" THEN S$ = MID$("SSSS       ",D2,1)
+1330 BA=1
+1331 IF N$ = "N" THEN BA = BA + 1
+1332 IF N$ = "S" THEN BA = BA + 2
+1335 BA$ = MID$(" NSA",BA,1)
 1349 RETURN
 
 1350 REM ------------------------
@@ -240,3 +242,4 @@
 1392 IF G$ > "0" THEN BG = BG + 2
 1395 BG$ = MID$(" BG2",BG,1)
 1399 RETURN
+
