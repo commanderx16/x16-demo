@@ -218,12 +218,12 @@
 1302 REM ------------------------
 1310 N$ = " ": GOSUB 260
 1311 IF SP$ = "A" THEN N$ = MID$("NNNNN      ",D2,1)
-1312 IF SP$ = "B" THEN N$ = MID$("NNN        ",D2,1)
+1312 IF SP$ = "B" THEN N$ = MID$("NNNN       ",D2,1)
 1320 S$ = " ": GOSUB 260
 1321 IF SP$ = "A" THEN S$ = MID$("SSS        ",D2,1)
 1322 IF SP$ = "B" THEN S$ = MID$("SSSS       ",D2,1)
 1323 IF SP$ = "C" THEN S$ = MID$("SSSSS      ",D2,1)
-1324 IF SP$ = "D" THEN S$ = MID$("SSSS       ",D2,1)
+1324 IF SP$ = "D" THEN S$ = MID$("SSSSSS     ",D2,1)
 1330 BA=1
 1331 IF N$ = "N" THEN BA = BA + 1
 1332 IF N$ = "S" THEN BA = BA + 2
