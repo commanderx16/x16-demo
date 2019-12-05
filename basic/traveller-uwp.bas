@@ -227,7 +227,7 @@
 1330 BA=1
 1331 IF N$ = "N" THEN BA = BA + 1
 1332 IF N$ = "S" THEN BA = BA + 2
-1335 BA$ = MID$(" NSA",BA,1)
+1335 BA$ = MID$(" NS2",BA,1)
 1349 RETURN
 
 1350 REM ------------------------
