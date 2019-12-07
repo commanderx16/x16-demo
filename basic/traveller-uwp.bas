@@ -242,4 +242,3 @@
 1392 IF G$ > "0" THEN BG = BG + 2
 1395 BG$ = MID$(" BG2",BG,1)
 1399 RETURN
-
