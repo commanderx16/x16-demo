@@ -82,7 +82,7 @@ dse             =       $63
                 ldy     #>($f800 >> 2)
                 stx     veradata0
                 sty     veradata0
-                ldy     #59             ; clear screen 80x60 with $00,$02.
+                ldy     #59             ; clear screen 80x60 with $00,$0d.
                 ldx     #$00
 :               jsr     verasetxy       ; set row/col address.
                 ldx     #80
