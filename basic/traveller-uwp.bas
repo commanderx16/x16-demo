@@ -16,7 +16,7 @@
 120 INPUT "RING (4 DIGITS)"; RI
 130 INPUT "RAY (5 DIGITS)"; RA
 131 ? RI "RING/RAY" RA : ?
-140 FOR RI = RI TO RI + 9
+140 FOR RA = RA TO RA + 7:FOR RI = RI TO RI + 9
 141 GOSUB 1100: REM COL+ROW
 160 GOSUB 200: REM INIT
 165 IF P = 0 THEN ? CR$ " *":GOTO 195
@@ -28,8 +28,8 @@
 176 Z$ = " ": REM ZONE (N/A)
 177 AL$ = "  ": REM ALLEG (N/A)
 180 REM ? CR$ Z$ NA$ UW$ BA$ " " BG$ " " RM$
-181 ? CR$ " " NA$ " " UW$ " " BA$ " " BG$ " " RM$
-195 NEXT RI
+181 ? CR$ " " UW$ " " BA$ " " RM$ " " BG$ " " NA$
+195 NEXT RI: NEXT RA
 199 END
 
 200 REM ------------------------
@@ -60,7 +60,7 @@
 301 REM STARPORT
 302 REM ------------------------
 305 GOSUB 260
-307 SP$ = MID$("XXEEDDCCBBAAAA",D2,1)
+307 SP$ = MID$("AAABBCCDEEX",D2,1)
 309 RETURN 
 
 310 REM ------------------------
@@ -94,23 +94,24 @@
 400 REM ------------------------
 401 REM TL
 402 REM ------------------------
-405 GOSUB 250: TL = D1
+405 GOSUB 270: TL = D1
 410 IF SP$ = "A" THEN TL = TL + 6
 411 IF SP$ = "B" THEN TL = TL + 4
 412 IF SP$ = "C" THEN TL = TL + 2
 413 IF SP$ = "X" THEN TL = TL - 4
-414 IF SZ < 2 THEN TL = TL + 1
-415 IF SZ < 5 THEN TL = TL + 1
-416 IF HY = 9 THEN TL = TL + 1
-417 IF HY = 10 THEN TL = TL + 2
-418 IF PO > 0 AND PO < 6 THEN TL = TL + 1
-419 IF PO = 2 THEN TL = TL + 2
-420 IF PO > 9 THEN TL = TL + 4
-421 IF GV = 0 THEN TL = TL + 1
-422 IF GV = 5 THEN TL = TL + 1
-423 IF GV = 13 THEN TL = TL + 2
-424 IF TL < 0 THEN TL = 0
-425 TL$ = MID$(HX$,TL+1,1)
+414 IF SP$ = "F" THEN TL = TL + 1
+420 IF SZ < 2 THEN TL = TL + 1
+421 IF SZ < 5 THEN TL = TL + 1:REM FALL-THRU
+422 IF AT < 4 OR AT > 9 THEN TL = TL + 1
+423 IF HY = 9 THEN TL = TL + 1
+424 IF HY = 10 THEN TL = TL + 2
+425 IF PO > 0 AND PO < 6 THEN TL = TL + 1
+426 IF PO = 9 THEN TL = TL + 2
+427 IF PO > 9 THEN TL = TL + 4
+428 IF GV = 0 OR GV = 5 THEN TL = TL + 1
+429 IF GV = 13 THEN TL = TL + 2
+430 IF TL < 0 THEN TL = 0
+440 TL$ = MID$(HX$,TL+1,1)
 449 RETURN 
 
 500 REM ------------------------
@@ -140,7 +141,8 @@
 535 IN$ = "A3A...-. FFA...-. OC":GOSUB 550
 536 IN$ = ".0....-. .0....-. VA":GOSUB 550
 537 IN$ = "33A...-. 9FA...-. WA":GOSUB 550
-545 RM$ = MID$(RM$,2): REM +"                ",2,15)
+545 REM RM$ = MID$(RM$,2): REM NON-PADDED
+546 RM$ = MID$(RM$+"                ",2,15):REM PADDED
 549 RETURN
 
 550 REM ------------------------
@@ -209,32 +211,32 @@
 1285 NA$ = NA$ + F$ : LN = LEN(NA$)
 1290 IF RIGHT$(NA$,1) = " " THEN NA$ = LEFT$(NA$,LN-1)
 1295 NEXT
-1298 NA$ = LEFT$(NA$+"               ",10)
+1298 REM NA$ = LEFT$(NA$+"               ",10) <- PADDING
 1299 RETURN 
 
 1300 REM ------------------------
 1301 REM DETERMINE BASES
 1302 REM ------------------------
-1310 GOSUB 260
-1315 N$ = " ":S$ = " ":BA=1
-1320 IF SP$ = "A" THEN N$ = MID$("NNNNN      ",D2,1)
-1321 IF SP$ = "B" THEN N$ = MID$("NNN        ",D2,1)
-1330 IF SP$ = "A" THEN S$ = MID$("SSS        ",D2,1)
-1331 IF SP$ = "B" THEN S$ = MID$("SSSS       ",D2,1)
-1332 IF SP$ = "C" THEN S$ = MID$("SSSSS      ",D2,1)
-1333 IF SP$ = "D" THEN S$ = MID$("SSSS       ",D2,1)
-1340 IF N$ = "N" THEN BA = BA + 1
-1341 IF N$ = "S" THEN BA = BA + 2
-1345 BA$ = MID$(" NSA",BA,1)
+1310 N$ = " ": GOSUB 260
+1311 IF SP$ = "A" THEN N$ = MID$("NNNNN      ",D2,1)
+1312 IF SP$ = "B" THEN N$ = MID$("NNNN       ",D2,1)
+1320 S$ = " ": GOSUB 260
+1321 IF SP$ = "A" THEN S$ = MID$("SSS        ",D2,1)
+1322 IF SP$ = "B" THEN S$ = MID$("SSSS       ",D2,1)
+1323 IF SP$ = "C" THEN S$ = MID$("SSSSS      ",D2,1)
+1324 IF SP$ = "D" THEN S$ = MID$("SSSSSS     ",D2,1)
+1330 BA=1
+1331 IF N$ = "N" THEN BA = BA + 1
+1332 IF S$ = "S" THEN BA = BA + 2
+1335 BA$ = MID$(" NS2",BA,1)
 1349 RETURN
 
 1350 REM ------------------------
 1351 REM BELTS AND GAS GIANTS
 1352 REM ------------------------
 1360 GOSUB 260
-1370 B$ = MID$("00000112223", D2, 1)
-1375 GOSUB 260
-1380 G$ = MID$("00000112345", D2, 1)
+1370 G$ = MID$("00001122334", D2, 1)
+1380 B$ = MID$("000123", D1, 1)
 1390 BG = 1
 1391 IF B$ > "0" THEN BG = 2
 1392 IF G$ > "0" THEN BG = BG + 2
