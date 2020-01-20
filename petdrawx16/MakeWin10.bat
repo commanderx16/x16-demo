@@ -2,7 +2,7 @@
 WHERE /q acme.exe
 IF ERRORLEVEL 1 (
 	ECHO Requires ACME is installed in path location
-	EHOC Download from https://sourceforge.net/projects/acme-crossass/
+	ECHO Download from https://sourceforge.net/projects/acme-crossass/
 	EXIT /B
 ) ELSE (
 	ECHO Building PetDraw X16
