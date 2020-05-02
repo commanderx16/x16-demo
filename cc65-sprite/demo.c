@@ -76,7 +76,7 @@ void main(void)
         // Inside address bits 12:5.
         // Set the outside address to increment with each access.
 
-        vpoke((0x010000 >> 5) & 0xFF, 0x1FC00 + i * 8);
+        vpoke((0x010000 >> 5) & 0xFF, 0x11FC00 + i * 8);
 
         // 8 Bits-Per-Pixel mode (sprites can have 256 colors).
         // Inside address bits 16:13 (sprite pattern starts at 0x010000).
@@ -103,7 +103,7 @@ void main(void)
 
     // Copy the balloon sprite data into the video RAM.
     // Set the address to increment with each access.
-    vpoke(balloon[0], 0x10000);
+    vpoke(balloon[0], 0x110000);
     for (i = 0; ++i < 64*64; )
         VERA.data0 = balloon[i];
 
