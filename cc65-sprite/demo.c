@@ -108,7 +108,7 @@ void main(void)
         VERA.data0 = balloon[i];
 
     // Enable the sprites.
-    VERA.dc_video |= 0x40;
+    vera_sprites_enable(1);
 
     // Animate those sprites.
     puts("\npress any key to stop.");
@@ -133,5 +133,5 @@ void main(void)
     cgetc();
 
     // Disable the sprites.
-    VERA.dc_video &=0xbf;
+    vera_sprites_enable(0);
 }
