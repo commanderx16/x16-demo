@@ -43,7 +43,7 @@ static uint16_t ofs, start;
 
 static void startWrite()
 {
-    vpoke(0, 0x01f1ac);
+    vpoke(0, 0x01fa0c);
 }
 
 static void endWrite()
