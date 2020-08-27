@@ -75,7 +75,8 @@ void main(void)
 
         // Inside address bits 12:5.
         // Set the outside address to increment with each access.
-        vpoke((0x010000 >> 5) & 0xFF, 0x1F5000 + i * 8);
+
+        vpoke((0x010000 >> 5) & 0xFF, 0x11FC00 + i * 8);
 
         // 8 Bits-Per-Pixel mode (sprites can have 256 colors).
         // Inside address bits 16:13 (sprite pattern starts at 0x010000).
@@ -107,7 +108,7 @@ void main(void)
         VERA.data0 = balloon[i];
 
     // Enable the sprites.
-    vpoke(0x01, 0x0F4000);
+    vera_sprites_enable(1);
 
     // Animate those sprites.
     puts("\npress any key to stop.");
@@ -119,7 +120,7 @@ void main(void)
 
         // Update the sprites' y co-ordinates.
         for (i = 0; i < SPRITE_COUNT * 8; i += 8) {
-            vpoke(80 + sin[j], 0x0F5004 + i);
+            vpoke(80 + sin[j], 0x1FC04 + i);
             j += 4;
             if (j > 99)
                 j -= 100;
@@ -132,5 +133,5 @@ void main(void)
     cgetc();
 
     // Disable the sprites.
-    vpoke(0x00, 0x0F4000);
+    vera_sprites_enable(0);
 }
