@@ -120,7 +120,10 @@ void main(void)
 
         // Update the sprites' y co-ordinates.
         for (i = 0; i < SPRITE_COUNT * 8; i += 8) {
-            vpoke(80 + sin[j], 0x1FC04 + i);
+            // With vpoke you can change only 8 bits however, y co-ordinates are stored in 10 bits.
+            // So to store the whole variable you need to poke twice.
+            vpoke((80 + sin[j]) & 0xFF, 0x1FC04 + i);
+            vpoke((80 + sin[j]) >> 8,   0x1FC05 + i);
             j += 4;
             if (j > 99)
                 j -= 100;
