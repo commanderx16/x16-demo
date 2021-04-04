@@ -43,12 +43,12 @@ static uint16_t ofs, start;
 
 static void startWrite()
 {
-    vpoke(0, 0x0f100c);
+    vpoke(0, 0x01fa0c);
 }
 
 static void endWrite()
 {
-    vpoke(15, 0x0f100c);
+    vpoke(15, 0x01fa0c);
 }
 
 static void wait(uint16_t samples)

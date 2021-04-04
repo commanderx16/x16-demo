@@ -38,7 +38,7 @@ parser.add_argument('output', help='the PRG output directory')
 args = parser.parse_args()
 
 for f in os.listdir(args.input):
-    if f.endswith('.bas'):
+    if f.upper().endswith('.BAS'):
         basFilename = args.input + "/" + f
         print("converting file %s..." % basFilename)
         prg = f.upper()[:-4] + ".PRG"
