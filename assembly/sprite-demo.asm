@@ -4,11 +4,7 @@
 
 	!byte $0b,$08,$01,$00,$9e,$32,$30,$36,$31,$00,$00,$00
 
-	+video_init
-
-; enable sprites
-	lda #1
-	+vstore vreg_spr
+	+video_overlay VERA_EN_SPRITE
 
 MAX_SPRITES = 16
 MAX_X = 640
@@ -38,31 +34,21 @@ setup:
 setup_done:
 
 ; set up sprite shape
-	+vset spr_data
+	+vset spr_data | VERA_AUTO_INC_1
 
 	ldy #1 ; white
 
 	ldx #0
 l1:	lda sprite,x
 	jsr convert_color
-	sta veradat
+	sta VERA_DATA
 	inx
 	bne l1
 l2:	lda sprite + $100,x
 	jsr convert_color
-	sta veradat
+	sta VERA_DATA
 	inx
 	bne l2
-l3:	lda sprite + $200,x
-	jsr convert_color
-	sta veradat
-	inx
-	bne l3
-l4:	lda sprite + $300,x
-	jsr convert_color
-	sta veradat
-	inx
-	bne l4
 
 loop:
 	ldx #0
@@ -128,7 +114,7 @@ ll4:
 	jmp lo2
 nlo2:
 
-	lda #10 
+	lda #10
 	ldy #0
 delay:	dey
 	bne delay
