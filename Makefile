@@ -4,8 +4,8 @@ all: $(SUBDIRS)
 	rm -rf release
 	mkdir -p release/basic
 	mkdir -p release/PRG
-	cp assembly/mode4-demo.prg release/PRG
-	cp assembly/mode7-demo.prg release/PRG
+	cp assembly/tilemap-demo.prg release/PRG
+	cp assembly/bitmap-demo.prg release/PRG
 	cp assembly/sprite-demo.prg release/PRG
 	cp cc65-audio/audio.prg release/PRG
 	cp cc65-sprite/demo.prg release/PRG
