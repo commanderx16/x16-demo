@@ -69,8 +69,8 @@ loop3:	lda (2),y
 	jmp *
 
 tilemap:
-!bin "mode4-tilemap.bin"
+!bin "tilemap-tilemap.bin"
 tiles:
-!bin "mode4-tiles.bin"
+!bin "tilemap-tiles.bin"
 palette:
-!bin "mode4-palette.bin"
+!bin "tilemap-palette.bin"

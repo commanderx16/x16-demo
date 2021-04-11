@@ -52,6 +52,6 @@ loop3:	lda (2),y
 	jmp *
 
 bitmap:
-!bin "mode7-bitmap-cut.bin"
+!bin "bitmap-bitmap-cut.bin"
 palette:
-!bin "mode7-palette.bin"
+!bin "bitmap-palette.bin"
