@@ -27,6 +27,7 @@
 import sys
 import argparse
 import os
+import subprocess
 import codecs
 
 # parse arguments
@@ -56,7 +57,7 @@ for f in os.listdir(args.input):
             output.write(bas)
 
         # call the emulator to create the PRG file
-        os.system(args.emulator + " -bas " + tempFilename)
+        subprocess.run([args.emulator, "-bas", tempFilename])
         
         # copy output to the final directoy
         os.rename(prg, prgFilename)
