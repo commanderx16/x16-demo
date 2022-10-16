@@ -1,3 +1,2 @@
 all:
-	acme -f cbm -o petdrawx16.prg petdrawx16.asm
-
+	cl65 -t cx16 -o petdrawx16.prg -l petdrawx16.list petdrawx16.asm
