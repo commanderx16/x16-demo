@@ -40,7 +40,7 @@ args = parser.parse_args()
 for f in os.listdir(args.input):
     if f.upper().endswith('.BAS'):
         basFilename = args.input + "/" + f
-        print("converting file %s..." % basFilename)
+        print("converting file %s..." % basFilename, flush=True)
         prg = f.upper()[:-4] + ".PRG"
         prgFilename = args.output + "/" + prg
         prg = prg + ".TMP"
