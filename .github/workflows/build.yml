@@ -1,0 +1,47 @@
+name: Build Demos
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install General Dependencies
+        run: sudo apt-get install -y make build-essential subversion libsdl2-dev
+      - name: Install Python Dependencies
+        run: pip install -r tools/requirements.txt
+      - name: Install cc65
+        run: |
+          cd ..
+          git clone https://github.com/cc65/cc65.git
+          cd cc65
+          make -j
+          sudo make install
+      - name: Install ACME
+        run: |
+          cd ..
+          svn checkout svn://svn.code.sf.net/p/acme-crossass/code-0/trunk acme-crossass-code-0
+          cd acme-crossass-code-0/src
+          make -j
+          sudo make install
+      - name: Download Latest X16-Emu
+        run: |
+          cd ..
+          gh run download -R commanderx16/x16-emulator -n "X16-Emu Linux 64-bit" --dir x16-emulator
+          cd x16-emulator
+          tar --strip-components=1 -xf x16emu.tar.gz
+          ./x16emu -version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Demos
+        run: make
+      - name: Archive Build Result
+        uses: actions/upload-artifact@v3
+        with:
+          name: X16 Demos
+          path: release

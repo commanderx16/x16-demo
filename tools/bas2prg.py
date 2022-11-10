@@ -40,7 +40,7 @@ args = parser.parse_args()
 for f in os.listdir(args.input):
     if f.upper().endswith('.BAS'):
         basFilename = args.input + "/" + f
-        print("converting file %s..." % basFilename)
+        print("converting file %s..." % basFilename, flush=True)
         prg = f.upper()[:-4] + ".PRG"
         prgFilename = args.output + "/" + prg
         prg = prg + ".TMP"
@@ -56,7 +56,8 @@ for f in os.listdir(args.input):
             output.write(bas)
 
         # call the emulator to create the PRG file
-        os.system(args.emulator + " -bas " + tempFilename)
+        # do not require sound output (needed for CI)
+        os.system(args.emulator + " -sound none -bas " + tempFilename)
         
         # copy output to the final directoy
         os.rename(prg, prgFilename)
