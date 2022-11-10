@@ -31,12 +31,8 @@
 
 #include "vgm.inc"
 
-struct YM2151_t {
-    uint8_t reg;
-    uint8_t data;
-};
-
-#define YM2151 (*(volatile struct YM2151_t*) 0x9fe0)
+//note: YM2151 struct is defined by cc65 in cx16.h
+//since commit a5e69e7.
 
 static uint8_t run;
 static uint16_t ofs, start;
