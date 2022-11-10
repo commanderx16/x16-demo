@@ -33,7 +33,8 @@ jobs:
         run: |
           cd ..
           gh run download -R commanderx16/x16-emulator -n "X16-Emu Linux 64-bit" --dir x16-emulator
-          ls x16-emulator
+          cd x16-emulator
+          tar --strip-components=1 -zxf *
           ./x16-emulator/x16emu -version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
