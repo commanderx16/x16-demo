@@ -25,7 +25,7 @@ jobs:
       - name: Install ACME
         run: |
           cd ..
-          svn checkout https://svn.code.sf.net/p/acme-crossass/code-0/trunk acme-crossass-code-0
+          svn checkout svn://svn.code.sf.net/p/acme-crossass/code-0/trunk acme-crossass-code-0
           cd acme-crossass-code-0/src
           make -j
           sudo make install
@@ -36,8 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Demos
-        run: |
-          make
+        run: make
       - name: Archive Build Result
         uses: actions/upload-artifact@v3
         with:

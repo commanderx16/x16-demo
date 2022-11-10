@@ -1,12 +1,16 @@
 SUBDIRS := petdrawx16 assembly basic-sprite cc65-audio cc65-sprite
 
 # determine whether to use python3 or python command
-PYTHON=$(shell command -v python3)
-ifeq (, $(PYTHON))
-	PYTHON=$(shell command -v python)
-	ifeq (, $(PYTHON))
+CHECK_CMD=$(shell python3 -V)
+ifeq (, $(CHECK_CMD))
+	CHECK_CMD=$(shell python -V)
+	ifeq (, $(CHECK_CMD))
 		$(error "Neither Python nor Python3 not found in $(PATH)")
+	else
+		PYTHON=python
 	endif
+else
+	PYTHON=python3
 endif
 
 all: $(SUBDIRS)
