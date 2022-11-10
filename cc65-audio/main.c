@@ -95,7 +95,7 @@ char* readWideString(uint16_t* pos)
         buf[i++] = wc;
         if (wc == 0) break;
     }
-    return buf;
+    return (char*) buf;
 }
 
 void play()

@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install general dependencies
+      - name: Install General Dependencies
         run: sudo apt-get install -y make build-essential subversion libsdl2-dev
       - name: Install Python Dependencies
         run: pip install -r tools/requirements.txt
@@ -29,7 +29,7 @@ jobs:
           cd acme-crossass-code-0/src
           make -j
           sudo make install
-      - name: Download latest X16-Emu
+      - name: Download Latest X16-Emu
         run: |
           cd ..
           gh run download -R commanderx16/x16-emulator -n "X16-Emu Linux 64-bit" --dir x16-emulator
