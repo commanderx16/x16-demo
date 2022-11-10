@@ -32,16 +32,12 @@ jobs:
       - name: Download latest X16-Emu
         run: |
           cd ..
-          gh run download -R commanderx16/x16-emulator -n "X16-Emu Linux 64-bit" --dir x16-emu
-          pwd
-          ls -l .
+          gh run download -R commanderx16/x16-emulator -n "X16-Emu Linux 64-bit" --dir x16-emulator
+          x16-emulator/x16emu --version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Demos
-        run: |
-          pwd
-          ls -l ..
-          make
+        run: make
       - name: Archive Build Result
         uses: actions/upload-artifact@v3
         with:
