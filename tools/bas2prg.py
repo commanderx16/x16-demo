@@ -56,7 +56,8 @@ for f in os.listdir(args.input):
             output.write(bas)
 
         # call the emulator to create the PRG file
-        os.system(args.emulator + " -bas " + tempFilename)
+        # do not require sound output (needed for CI)
+        os.system(args.emulator + "-audio sound -bas " + tempFilename)
         
         # copy output to the final directoy
         os.rename(prg, prgFilename)

@@ -1,4 +1,7 @@
-C, Asssembly and B.A.S.I.C. v2 examples for commander-x16
+# C, Asssembly and B.A.S.I.C. v2 examples for commander-x16
+
+[![Build Status](https://github.com/commanderx16/x16-demo/actions/workflows/build.yml/badge.svg)](https://github.com/commanderx16/x16-demo/actions/workflows/build.yml)
+[![Contributors](https://img.shields.io/github/contributors/commanderx16/x16-demo.svg)](https://github.com/commanderx16/x16-demo/graphs/contributors)
 
 Basic examples are collected from Facebook group
 
@@ -17,7 +20,7 @@ The tools/ directory contains:
 + requirements.txt - Python requirements for the tools. Use with "pip3 install -r requirements.txt"
 
 
-# How to compile asm files
+## How to compile asm files
 The Makefile need the acme compiler.
 
 Install the acme compiler from 
