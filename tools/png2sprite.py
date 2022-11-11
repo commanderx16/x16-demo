@@ -28,10 +28,16 @@
 # Converts a PNG image to a C style array to be used as a sprite with Commander X16
 
 from PIL import Image
-import numpy as np
+import subprocess
 import math
 import sys
 import argparse
+try:
+    import numpy as np
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip3", "install", 'numpy'])
+finally:
+    import numpy as np
 
 # parse arguments
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter,
