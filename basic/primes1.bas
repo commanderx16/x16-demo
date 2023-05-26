@@ -1,0 +1,31 @@
+1 REM ********************************
+2 REM
+3 REM SIEVE OF ERATOSTHENES
+4 REM
+9 REM ********************************
+15 REM 25 PRIMES IN THE FIRST 100
+16 REM 168 PRIMES IN THE FIRST 1K
+17 REM 1229 IN THE FIRST 10K
+
+40 A = 999 :REM MAX NUMBER
+50 I = 0   :REM PRIME COUNT
+
+100 ? CHR$(147) "FINDING PRIMES TO" A :?
+110 ? 2;
+
+200 REM BEGIN ************************
+201 T1=TI: FOR N=3 TO A STEP 2
+210   FOR X=3 TO SQR(N) STEP 2
+220     IF X=N GOTO 300
+230     IF (N/X = INT(N/X)) = -1 GOTO 400
+300   NEXT X
+310   I=I+1 :? N;
+400 NEXT N
+499 T2=TI
+500 REM DONE  ************************
+
+800 REM SUMMARY
+810 ?:?:? I+1 "PRIMES FOUND"
+820 ?:? "TIME:" :?
+830 ? T2 - T1 "JIFFIES"
+840 ? (T2-T1)/60 "SECONDS"
